@@ -106,6 +106,12 @@ def build_splits(
     Genera splits estratificados 70/15/15 y los guarda como CSV.
     SEMILLA FIJA = 42. No usar otra.
 
+    La estratificación garantiza que cada split respete la distribución
+    original de clases del dataset (crítico dado el desbalance del dataset:
+    la clase 5★ tiene ~9000 muestras vs ~1000 de la clase 2★).
+    Esto asegura que train, val y test tengan la misma proporción de clases
+    y que las métricas de val/test sean representativas.
+
     Args:
         df        : DataFrame completo con texto y etiquetas.
         text_col  : Nombre de la columna de texto.
@@ -116,8 +122,49 @@ def build_splits(
     Returns:
         (train_df, val_df, test_df)
     """
-    # TODO: Yibby implementa aquí
-    raise NotImplementedError("Yibby: implementar build_splits()")
+    from sklearn.model_selection import train_test_split
+
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Validar que las columnas existen
+    for col in [text_col, target_col]:
+        if col not in df.columns:
+            raise ValueError(f"Columna '{col}' no encontrada en el DataFrame.")
+
+    df = df[[text_col, target_col]].dropna().copy()
+
+    # Split 70 / 30  →  luego el 30 se parte en 15 / 15
+    train_df, temp_df = train_test_split(
+        df,
+        test_size=0.30,
+        random_state=seed,
+        stratify=df[target_col],
+    )
+    val_df, test_df = train_test_split(
+        temp_df,
+        test_size=0.50,
+        random_state=seed,
+        stratify=temp_df[target_col],
+    )
+
+    # Guardar
+    train_df.to_csv(output_dir / "train.csv", index=False)
+    val_df.to_csv(  output_dir / "val.csv",   index=False)
+    test_df.to_csv( output_dir / "test.csv",  index=False)
+
+    # Resumen
+    total = len(df)
+    print(f"Splits guardados en '{output_dir}/'")
+    print(f"  train.csv : {len(train_df):>5} muestras  ({100*len(train_df)/total:.1f}%)")
+    print(f"  val.csv   : {len(val_df):>5} muestras  ({100*len(val_df)/total:.1f}%)")
+    print(f"  test.csv  : {len(test_df):>5} muestras  ({100*len(test_df)/total:.1f}%)")
+    print("\nDistribución de clases en train (debe reflejar el dataset original):")
+    dist = train_df[target_col].value_counts(normalize=True).sort_index()
+    for cls, pct in dist.items():
+        print(f"  Clase {cls}: {pct:.1%}")
+
+    return train_df, val_df, test_df
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -194,3 +241,47 @@ def build_pipeline(config: dict) -> dict:
     """
     # TODO: Yibby implementa aquí
     raise NotImplementedError("Yibby: implementar build_pipeline()")
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Punto de entrada: python src/preprocessing.py
+# Genera train.csv, val.csv y test.csv en data/
+# ──────────────────────────────────────────────────────────────────────────────
+
+if __name__ == "__main__":
+    import random
+    import torch
+
+    # Semilla global (contrato 4.3)
+    random.seed(SEED)
+    np.random.seed(SEED)
+    torch.manual_seed(SEED)
+
+    # Rutas
+    ROOT     = Path(__file__).resolve().parent.parent  # raíz del proyecto
+    DATA_DIR = ROOT / "data"
+    CSV_PATH = DATA_DIR / "Big_AHR.csv"
+
+    if not CSV_PATH.exists():
+        raise FileNotFoundError(
+            f"No se encontró el dataset en '{CSV_PATH}'.\n"
+            "Coloca Big_AHR.csv dentro de la carpeta data/ antes de continuar."
+        )
+
+    print(f"Cargando dataset desde: {CSV_PATH}")
+    df_raw = pd.read_csv(CSV_PATH)
+    print(f"Shape original: {df_raw.shape}")
+    print(f"Columnas      : {list(df_raw.columns)}\n")
+
+    # Preparar columnas: texto limpio + label 0-4 (PyTorch necesita índices desde 0)
+    df_raw["review_text"] = df_raw["review_text"].astype(str).str.strip()
+    df_raw["label"]       = df_raw["rating"] - 1   # rating 1-5 → label 0-4
+
+    # Generar y guardar los splits
+    build_splits(
+        df        = df_raw,
+        text_col  = "review_text",
+        target_col= "label",
+        seed      = SEED,
+        output_dir= DATA_DIR,
+    )
