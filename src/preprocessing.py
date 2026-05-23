@@ -390,9 +390,9 @@ def build_pipeline(config: dict) -> dict:
     X_test  = encode_sequences(test_texts,  word2idx, max_len)
 
     # 5. Etiquetas 0-indexed (dataset 1-5 → 0-4)
-    y_train = train_df[label_col].values - 1
-    y_val   = val_df[label_col].values   - 1
-    y_test  = test_df[label_col].values  - 1
+    y_train = train_df[label_col].values
+    y_val   = val_df[label_col].values  
+    y_test  = test_df[label_col].values 
 
     assert y_train.min() >= 0, "Error: etiquetas negativas. Revisar label_col."
 
