@@ -389,10 +389,23 @@ def build_pipeline(config: dict) -> dict:
     X_val   = encode_sequences(val_texts,   word2idx, max_len)
     X_test  = encode_sequences(test_texts,  word2idx, max_len)
 
-    # 5. Etiquetas 0-indexed (dataset 1-5 → 0-4)
-    y_train = train_df[label_col].values - 1
-    y_val   = val_df[label_col].values   - 1
-    y_test  = test_df[label_col].values  - 1
+    # 5. Etiquetas (detectar si ya son 0-indexed o necesitan ajuste)
+    y_train_raw = train_df[label_col].values
+    y_val_raw   = val_df[label_col].values
+    y_test_raw  = test_df[label_col].values
+
+    # Si las etiquetas empiezan en 1 (rating 1-5), convertir a 0-4
+    # Si ya empiezan en 0 (label 0-4), no tocar
+    if y_train_raw.min() >= 1:
+        print(f"  Labels detectados como 1-indexed (min={y_train_raw.min()}), convirtiendo a 0-indexed…")
+        y_train = y_train_raw - 1
+        y_val   = y_val_raw   - 1
+        y_test  = y_test_raw  - 1
+    else:
+        print(f"  Labels ya son 0-indexed (min={y_train_raw.min()}, max={y_train_raw.max()})")
+        y_train = y_train_raw
+        y_val   = y_val_raw
+        y_test  = y_test_raw
 
     assert y_train.min() >= 0, "Error: etiquetas negativas. Revisar label_col."
 
