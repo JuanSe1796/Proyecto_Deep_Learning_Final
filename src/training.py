@@ -236,7 +236,7 @@ def train(
     scheduler = None
     if config.get("use_lr_scheduler", True):
         scheduler = ReduceLROnPlateau(
-            optimizer, mode="min", factor=0.5, patience=2, verbose=True
+            optimizer, mode="min", factor=0.5, patience=2
         )
 
     # ── Early Stopping ────────────────────────────────────────────────────────
