@@ -1,6 +1,6 @@
 # Plan de Avance Global — Reunion 25 mayo 2026
 
-**Fecha de revision:** 24 mayo 2026 (noche) — INVENTARIO VALIDADO
+**Fecha de revision:** 24 mayo 2026 (23:30) — INVENTARIO REVALIDADO POR CLAUDE
 **Entrega:** Lunes 25 mayo 2026
 **Estado general:** URGENTE — modelos listos, faltan documentos
 
@@ -84,10 +84,10 @@ Esto cambia la narrativa del proyecto: el modelo combinado sin pre-entrenamiento
   - Resultados (matrices, metricas por clase, curvas — todo en figures/)
   - Conclusiones (respondiendo: los resultados permiten tomar decisiones?)
 
-**Metricas BiLSTM definitivo (v1, sin class weights):**
-- F1 macro: 0.5568 | Accuracy: 0.6915
-- F1 por clase: 1=0.752, 2=0.212, 3=0.492, 4=0.487, 5=0.840
-- Parametros: 3,253,253 | Tiempo: 381.9s CPU | Mejor epoca: 4
+**Metricas BiLSTM definitivo (v1, sin class weights) — CORREGIDO segun bilstm_v1_metrics.json:**
+- F1 macro: 0.5749 | Accuracy: 0.6871
+- F1 por clase: 1=0.716, 2=0.202, 3=0.564, 4=0.572, 5=0.821
+- Parametros: 3,253,253 | Tiempo: 27,685.9s CPU | Mejor epoca: 4
 
 ---
 
@@ -135,8 +135,9 @@ Esto cambia la narrativa del proyecto: el modelo combinado sin pre-entrenamiento
   - Tabla obligatoria: LSTM vs BiLSTM vs BETO
   - Curvas loss/accuracy del transformer (YA en figures/)
   - Preguntas a responder: supero a los clasicos? por que? costo computacional?
-- [ ] **Tema de splits:** Sebastian genero splits PROPIOS en Colab (no uso data/train.csv)
-  - Si no hay tiempo para re-ejecutar, documentar discrepancia como limitacion
+
+**Splits VALIDADOS:** Sebastian clono el repo en Colab y cargo data/train.csv, val.csv, test.csv
+(confirmado en celda 6 del notebook 06). Las metricas son directamente comparables con los clasicos.
 
 **Metricas BETO fine-tuned:**
 - F1 macro: 0.5873 | Accuracy: 0.6592
@@ -154,12 +155,12 @@ Esto cambia la narrativa del proyecto: el modelo combinado sin pre-entrenamiento
 | 2 | BETO fine-tuned (Sebastian) | 0.5873 | 0.6592 | 0.5810 | 0.5983 | 0.386 | 0.514 | 7.7M ent. | 676s GPU |
 | 3 | GRU+Bahdanau (Daniel) | 0.5785 | 0.6416 | 0.5757 | 0.6024 | 0.436 | 0.457 | 4.6M | 119.4s GPU |
 | 4 | BiLSTM+Bahdanau (Daniel) | 0.5740 | 0.6471 | 0.5836 | 0.5842 | 0.433 | 0.479 | 5.2M | 129.3s GPU |
-| 5 | BiLSTM v1 (Yibby) | 0.5568 | 0.6915 | 0.6130 | 0.5457 | 0.212 | 0.493 | 3.3M | 381.9s CPU |
+| 5 | BiLSTM v1 (Yibby) | 0.5749 | 0.6871 | 0.5876 | 0.5795 | 0.202 | 0.564 | 3.3M | 27,685.9s CPU |
 | 6 | LSTM v3 (Felipe) | 0.3996 | 0.6042 | 0.5639 | 0.4408 | 0.168 | 0.359 | 2.7M | 321.2s CPU |
 
 **Hallazgos clave:**
 - El BiLSTM+MultiHead (sin pre-entrenamiento) SUPERA a BETO por 3.2 puntos de F1 macro
-- La atencion multi-cabeza es la diferencia mas grande: F1 en clase 2est pasa de 0.212 (BiLSTM puro) a 0.533
+- La atencion multi-cabeza es la diferencia mas grande: F1 en clase 2est pasa de 0.202 (BiLSTM puro) a 0.533
 - Las clases 2 y 3 estrellas siguen siendo las mas dificiles para todos los modelos
 - BETO tiene mejor accuracy pero peor F1 macro que BiLSTM+MultiHead — indica sesgo hacia clase mayoritaria
 
@@ -227,17 +228,17 @@ Para la tabla comparativa obligatoria del informe de investigacion:
 | Modelo | Accuracy | Precision macro | Recall macro | F1 macro | Parametros | Tiempo |
 |---|---|---|---|---|---|---|
 | LSTM (Clasico 1) | 0.6042 | 0.5639 | 0.4408 | 0.3996 | 2,700,933 | 321.2s CPU |
-| BiLSTM (Clasico 2) | 0.6915 | 0.6130 | 0.5457 | 0.5568 | 3,253,253 | 381.9s CPU |
+| BiLSTM (Clasico 2) | 0.6871 | 0.5876 | 0.5795 | 0.5749 | 3,253,253 | 27,685.9s CPU |
 | BETO fine-tuned | 0.6592 | 0.5810 | 0.5983 | 0.5873 | 7.68M ent. | 676s GPU |
 
-BETO supera al mejor clasico (BiLSTM) en F1 macro por 3.05 puntos (0.5873 vs 0.5568).
-La mejora mas notable es en clases minoritarias: clase 2est (0.386 vs 0.212), clase 3est (0.514 vs 0.492).
+BETO supera al mejor clasico (BiLSTM) en F1 macro por 1.24 puntos (0.5873 vs 0.5749).
+La mejora mas notable es en clases minoritarias: clase 2est (0.386 vs 0.202), clase 3est (0.514 vs 0.564 — BiLSTM es mejor en clase 3).
 
 ### Preguntas pendientes para el equipo
 
 1. **Daniel:** Puede copiar los checkpoints .pt de los modelos combinados? Si pesan mucho, subir a Drive y poner link.
 2. **Sebastian:** El informe de investigacion compara SOLO contra los 2 clasicos (LSTM y BiLSTM), NO contra el modelo combinado. Eso es correcto segun el enunciado.
-3. **Limitacion de splits de Sebastian:** Decidir si documentar como limitacion o si puede re-ejecutar rapidamente en Colab con los splits del repo.
+3. ~~**Limitacion de splits de Sebastian:**~~ **RESUELTO** — Sebastian SI uso los splits del repo (clono el repo en Colab). No hay discrepancia.
 4. **Formato de entrega:** Confirmar formatos (PDF para articulo/reporte/informe, PPTX+PDF para presentacion).
 
 ---
@@ -254,3 +255,42 @@ La mejora mas notable es en clases minoritarias: clase 2est (0.386 vs 0.212), cl
 - [ ] Informe de investigacion en PDF (5 pag max) — Sebastian
 - [ ] Checkpoints de modelos combinados (.pt) — Daniel
 - [ ] Los 4 nombres y roles claros en cada documento
+- [x] ~~PreEntrenado.ipynb de Sebastian~~ — No necesario: 06_transformer_sebas.ipynb es el notebook canonico completo
+
+---
+
+## VALIDACION DE INVENTARIO (24 mayo 2026 — 23:30)
+
+### Archivos verificados fisicamente en el repositorio
+
+**Presentes y confirmados:**
+- 4 archivos de datos (Big_AHR.csv + 3 splits)
+- 3 modulos src/ (preprocessing.py, training.py, metrics.py + __init__.py)
+- 6 notebooks en notebooks/ (01 a 06, todos presentes)
+- 9 figuras EDA + 13 figuras de modelos clasicos + 6 figuras modelo combinado + 2 figuras transformer = 30 figuras en figures/
+- 10 archivos JSON de metricas en results/
+- 8 checkpoints .pt en results/ (bilstm_bahdanau_best.pt movido desde raiz)
+- 1 tabla comparativa CSV
+- 1 borrador de articulo IEEE en docs/
+- 2 archivos de planificacion (plan_proyecto, plan_avance_global)
+- 2 archivos temporales de Felipe en freyesTemp/
+
+**Ausentes (confirmado que NO existen en disco):**
+1. ~~`results/bilstm_bahdanau_best.pt`~~ — **CORREGIDO**: movido de raiz del proyecto a results/ (20.7MB)
+2. `results/gru_bahdanau_best.pt` — checkpoint del modelo de Daniel (generado en GPU, no copiado)
+3. `results/bilstm_multihead_best.pt` — checkpoint del modelo DEFINITIVO de Daniel (generado en GPU, no copiado)
+4. `results/transformer_best/` — checkpoint del transformer de Sebastian (~440MB, en Google Drive)
+5. ~~`PreEntrenado.ipynb`~~ — No necesario: era un borrador anterior, 06_transformer_sebas.ipynb contiene todo
+6. Articulo IEEE final en PDF
+7. Reporte tecnico (ni borrador ni final)
+8. Presentacion de slides (ni borrador ni final)
+9. Informe de investigacion (ni borrador ni final)
+
+### Inconsistencia detectada en README anterior
+- El README listaba `PreEntrenado.ipynb` como "LISTO" pero el archivo NO existe en el repositorio local. Corregido.
+
+### Notas sobre checkpoints faltantes
+- De los 3 checkpoints originalmente faltantes de Daniel, bilstm_bahdanau_best.pt fue recuperado (estaba en la raiz del proyecto).
+- Solo el bilstm_multihead_best.pt es critico (modelo definitivo del proyecto). gru_bahdanau_best.pt es historico.
+- El transformer_best/ de Sebastian pesa ~440MB y probablemente no conviene subirlo al repo Git.
+  Documentar link a Google Drive es suficiente.

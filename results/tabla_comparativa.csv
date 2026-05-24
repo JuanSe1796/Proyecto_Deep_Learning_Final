@@ -1,6 +1,6 @@
-,Modelo,F1 macro,Accuracy,Prec macro,Recall macro,F1 cl.2★,F1 cl.3★,Params,Tiempo (s),Épocas
+,Modelo,F1 macro,Accuracy,Prec macro,Recall macro,F1 cl.2,F1 cl.3,Params,Tiempo (s),Epocas
 1,BiLSTM+MultiHead (Daniel),0.6193,0.6548,0.6086,0.6454,0.533,0.5491,"6,110,981",303.8,16
 2,GRU+Bahdanau (Daniel),0.5785,0.6416,0.5757,0.6024,0.4362,0.457,"4,599,813",119.4,9
 3,BiLSTM+Bahdanau (Daniel),0.574,0.6471,0.5836,0.5842,0.4331,0.4791,"5,191,685",129.3,9
-4,BiLSTM (Yibby),0.5568,0.6915,0.613,0.5457,0.2116,0.4925,"3,253,253",381.9,8
-5,LSTM (Felipe),0.3996,0.6042,0.5639,0.4408,0.0,0.0,"2,700,933",321.2,24
+4,BiLSTM v1 (Yibby),0.5749,0.6871,0.5876,0.5795,0.2018,0.5638,"3,253,253",27685.9,8
+5,LSTM v3 (Felipe),0.3996,0.6042,0.5639,0.4408,0.1675,0.3586,"2,700,933",321.2,24
