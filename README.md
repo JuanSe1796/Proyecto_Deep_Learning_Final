@@ -76,7 +76,7 @@ URL: https://www.kaggle.com/datasets/chizhikchi/andalusian-hotels-reviews-unbala
 | `notebooks/03_lstm_felipe.ipynb` | LISTO | Felipe | Si - 4 versiones entrenadas, v3 definitiva |
 | `notebooks/04_bilstm_yibby.ipynb` | LISTO | Yibby/Felipe | Si - 2 versiones entrenadas, v1 definitiva |
 | `notebooks/05_combined_daniel.ipynb` | **PENDIENTE** | Daniel | Solo tiene celda de configuracion y un TODO |
-| `notebooks/06_transformer_sebas.ipynb` | **PARCIAL** | Sebastian | Solo 1 epoca local (fallo espacio disco MPS) |
+| `notebooks/06_transformer_sebas.ipynb` | LISTO | Sebastian | Ejecutado en Colab con GPU (5 epocas, Tesla T4) |
 | `PreEntrenado.ipynb` | LISTO | Sebastian | Ejecutado en Colab con GPU (5 epocas, Tesla T4) |
 
 ### Resultados (results/)
@@ -91,9 +91,7 @@ URL: https://www.kaggle.com/datasets/chizhikchi/andalusian-hotels-reviews-unbala
 | `results/bilstm_v1_metrics.json` | LISTO | BiLSTM v1 (copia) | 0.5568 | 0.6915 |
 | `results/bilstm_v2_metrics.json` | LISTO | BiLSTM v2 (historico) | 0.5224 | 0.5594 |
 | `results/combined_metrics.json` | **FALTA** | Modelo Nuevo/Combinado | - | - |
-| `results/transformer_metrics.json` | **FALTA** | BETO fine-tuned | - | - |
-
-**Nota sobre transformer:** Sebastian ejecuto BETO en Colab (notebook `PreEntrenado.ipynb`) obteniendo **F1 macro=0.5873, Accuracy=0.6592** (5 epocas, 684s en Tesla T4). Los resultados se guardaron en Google Drive (`beto_finetuned_metrics.json`) pero **no estan en el repositorio local**.
+| `results/transformer_metrics.json` | LISTO | BETO fine-tuned | **0.5873** | 0.6592 |
 
 ### Figuras (figures/)
 
@@ -122,8 +120,8 @@ URL: https://www.kaggle.com/datasets/chizhikchi/andalusian-hotels-reviews-unbala
 | `figures/bilstm_analisis_final.png` | LISTO |
 | `figures/combined_curves.png` | **FALTA** |
 | `figures/combined_confusion_matrix.png` | **FALTA** |
-| `figures/transformer_curves.png` | **FALTA** (existe en Drive de Sebastian) |
-| `figures/transformer_confusion_matrix.png` | **FALTA** (existe en Drive de Sebastian) |
+| `figures/transformer_curves.png` | LISTO |
+| `figures/transformer_confusion_matrix.png` | LISTO |
 
 ### Documentos (docs/)
 
@@ -132,7 +130,7 @@ URL: https://www.kaggle.com/datasets/chizhikchi/andalusian-hotels-reviews-unbala
 | Articulo IEEE (4-6 pag, formato IEEE Conference) | **FALTA** | Felipe |
 | Reporte tecnico detallado (sin limite pag) | **FALTA** | Yibby |
 | Presentacion de slides | **FALTA** | Daniel |
-| Informe de investigacion (max 5 pag) | **FALTA** | Sebastian |
+| Informe de investigacion (max 5 pag) | Va en un 80% | Sebastian |
 
 ---
 
@@ -141,7 +139,7 @@ URL: https://www.kaggle.com/datasets/chizhikchi/andalusian-hotels-reviews-unbala
 | Modelo | Owner | Track | F1 macro | Accuracy | Params | Tiempo (s) | Estado |
 |---|---|---|---|---|---|---|---|
 | BiLSTM v1 | Yibby | PP | **0.5568** | 0.6915 | 3,253,253 | 381.9 | Definitivo |
-| BETO fine-tuned | Sebastian | TI | **0.5873** | 0.6592 | 109,854,725 (7.6M entrenables) | 684 | Ejecutado en Colab, falta integrar JSON al repo |
+| BETO fine-tuned | Sebastian | TI | **0.5873** | 0.6592 | 109,854,725 (7.7M entrenables) | 676 | LISTO |
 | LSTM v3 | Felipe | PP | **0.3996** | 0.6042 | 2,700,933 | 321.2 | Definitivo |
 | Modelo Nuevo/Combinado | Daniel | PP | - | - | - | - | **NO INICIADO** |
 
