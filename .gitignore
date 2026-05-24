@@ -7,7 +7,6 @@
 dist/
 build/
 .eggs/
-notebooks/06_transformer_sebas.ipynb
 
 # ── Entornos virtuales ────────────────────────────────────────────────────────
 .venv/
