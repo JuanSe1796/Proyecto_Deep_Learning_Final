@@ -62,7 +62,7 @@
   "training": {
     "epochs_run": 28,
     "best_epoch": 23,
-    "training_time_seconds": 378.9,
+    "training_time_seconds": 389.5,
     "loss_history": [
       1.37126,
       1.304717,
