@@ -47,7 +47,7 @@ URL: https://www.kaggle.com/datasets/chizhikchi/andalusian-hotels-reviews-unbala
 
 ---
 
-## Inventario de archivos (revalidado 24 mayo 2026)
+## Inventario de archivos (revalidado 25 mayo 2026)
 
 ### Data
 
@@ -76,7 +76,7 @@ URL: https://www.kaggle.com/datasets/chizhikchi/andalusian-hotels-reviews-unbala
 | `notebooks/03_lstm_felipe.ipynb` | LISTO | Felipe | Si - 4 versiones entrenadas, v3 definitiva |
 | `notebooks/04_bilstm_yibby.ipynb` | LISTO | Yibby/Felipe | Si - 2 versiones entrenadas, v1 definitiva |
 | `notebooks/05_combined_daniel.ipynb` | LISTO | Daniel | Si - 3 variantes entrenadas en GPU (CUDA), BiLSTM+MultiHead definitivo |
-| `notebooks/06_transformer_sebas.ipynb` | LISTO | Sebastian | Ejecutado en Colab con GPU (5 epocas, Tesla T4). Notebook CANONICO del transformer — contiene implementacion completa, entrenamiento, evaluacion, metricas y figuras |
+| `notebooks/06_transformer_sebas.ipynb` | LISTO | Sebastian | Ejecutado en GPU local (CUDA, PyTorch 2.12). Notebook CANONICO del transformer — 3 variantes entrenadas (v1/v2/v3), v3 definitiva (F1=0.6565). Incluye pre-tokenizacion, early stopping, LR discriminativo, comparacion final automatica |
 
 **Nota:** `PreEntrenado.ipynb` era un borrador anterior de Sebastian ejecutado en Colab. No es necesario para reproducibilidad — todo su contenido relevante esta consolidado en `06_transformer_sebas.ipynb`.
 
@@ -87,7 +87,7 @@ URL: https://www.kaggle.com/datasets/chizhikchi/andalusian-hotels-reviews-unbala
 | Archivo | Estado | Modelo | F1 macro (JSON) | Accuracy (JSON) |
 |---|---|---|---|---|
 | `results/bilstm_multihead_metrics.json` | LISTO | BiLSTM+MultiHead (Combinado definitivo) | **0.6193** | 0.6548 |
-| `results/transformer_metrics.json` | LISTO | BETO fine-tuned | **0.5873** | 0.6592 |
+| `results/transformer_metrics.json` | LISTO | BETO fine-tuned v3 (definitivo) | **0.6565** | 0.7252 |
 | `results/bilstm_v1_metrics.json` | LISTO | BiLSTM v1 (Clasico 2 definitivo, sin class weights) | **0.5749** | 0.6871 |
 | `results/lstm_metrics.json` | LISTO | LSTM v3 (Clasico 1 definitivo) | **0.3996** | 0.6042 |
 
@@ -118,7 +118,9 @@ URL: https://www.kaggle.com/datasets/chizhikchi/andalusian-hotels-reviews-unbala
 | `results/bilstm_bahdanau_best.pt` | LISTO | 20.7MB — movido de raiz a results/ |
 | `results/gru_bahdanau_best.pt` | **FALTA** | Generado en GPU, no copiado al repo |
 | `results/bilstm_multihead_best.pt` | **FALTA** | Checkpoint del modelo DEFINITIVO, generado en GPU, no copiado |
-| `results/transformer_best/` | **FALTA** | En Google Drive de Sebastian (~440MB) |
+| `results/transformer_best.pt` | **FALTA** | Checkpoint v3 definitivo, generado en GPU local (~440MB). Copiar al repo |
+| `results/transformer_v2_best.pt` | **FALTA** | Checkpoint v2, generado en GPU local |
+| `results/transformer_v3_best.pt` | **FALTA** | Checkpoint v3 (copia), generado en GPU local |
 
 ### Figuras (figures/)
 
@@ -170,12 +172,13 @@ URL: https://www.kaggle.com/datasets/chizhikchi/andalusian-hotels-reviews-unbala
 | `figures/bilstm_multihead_confusion_matrix.png` | LISTO |
 | `figures/combined_f1_por_clase.png` | LISTO |
 
-**Transformer — Sebastian (2 figuras):**
+**Transformer — Sebastian (3 figuras):**
 
 | Archivo | Estado | Nota |
 |---|---|---|
-| `figures/transformer_curves.png` | LISTO | |
-| `figures/transformer_confusion.png` | LISTO | Nombre difiere de convencion (sin _matrix) |
+| `figures/transformer_curves.png` | LISTO | Curvas de v1 (baseline) |
+| `figures/transformer_confusion.png` | LISTO | Confusion normalizada de v1. Nombre difiere de convencion (sin _matrix) |
+| `figures/transformer_confusion_absolutos.png` | LISTO | Confusion con valores absolutos de v1 |
 
 ### Documentos (docs/)
 
@@ -185,7 +188,7 @@ URL: https://www.kaggle.com/datasets/chizhikchi/andalusian-hotels-reviews-unbala
 | Articulo IEEE final (PDF, formato IEEE Conference) | **FALTA** | Felipe |
 | Reporte tecnico detallado (PDF, sin limite pag) | **FALTA — NO INICIADO** | Yibby |
 | Presentacion de slides (.pptx + PDF) | **FALTA — NO INICIADO** | Daniel |
-| Informe de investigacion (PDF, max 5 pag) | **FALTA — NO INICIADO** | Sebastian |
+| `docs/Informe_Investigacion.docx` | BORRADOR (en Word, falta PDF final) | Sebastian |
 
 ### Archivos de planificacion y temporales
 
@@ -194,7 +197,7 @@ URL: https://www.kaggle.com/datasets/chizhikchi/andalusian-hotels-reviews-unbala
 | `plan_proyecto_deep_learning.md` | LISTO | Plan maestro del proyecto (fuente de verdad) |
 | `plan_avance_global.md` | LISTO | Plan de avance consolidado con estado por persona |
 | `freyesTemp/plan_avance.md` | LISTO | Bitacora detallada de Felipe (4 fases documentadas) |
-| `freyesTemp/checklist_reunion_yibby.md` | LISTO | Checklist de validacion EDA+preprocessing |
+| `freyesTemp/setup_transformer_gpu.md` | LISTO | Guia Miniconda + GPU para notebook transformer |
 
 ### Otros archivos
 
@@ -202,6 +205,7 @@ URL: https://www.kaggle.com/datasets/chizhikchi/andalusian-hotels-reviews-unbala
 |---|---|---|
 | `requirements.txt` | LISTO | Dependencias del proyecto (version pinning flexible con >=) |
 | `test.py` | LISTO | Script de inspeccion rapida de datos (no es un test suite real) |
+| `setup_transformer_gpu.md` | LISTO | Copia de la guia GPU en raiz del proyecto |
 | `.gitignore` | LISTO | Configurado para __pycache__, checkpoints grandes, .env |
 
 ---
@@ -233,9 +237,14 @@ Existia en la raiz del proyecto (20.7MB).
 `lstm_metrics.json` usaba keys con estrella ("1★") mientras los demas usaban sin estrella ("1").
 **Correccion:** Keys de lstm_metrics.json normalizadas a formato sin estrella ("1", "2", "3", "4", "5").
 
-### BUG 6 (PENDIENTE): Transformer posiblemente no convergio
+### BUG 6 (CORREGIDO): Transformer posiblemente no convergio
 
-best_epoch = 5 = epochs_run = 5. Val loss seguia bajando (1.037 -> 0.940). El modelo podria haber mejorado con mas epocas. No hay early stopping real activo. Requiere re-entrenamiento con mas epocas para confirmar.
+**Problema original:** best_epoch = 5 = epochs_run = 5. Val loss seguia bajando. No habia early stopping.
+**Correccion:** Re-entrenado con 15 epocas max + early stopping (paciencia=3). Se entrenaron 3 variantes:
+- v1 (1 capa, balanced): 7 epocas, best=4, F1=0.5926
+- v2 (3 capas, balanced, lr discrim.): 9 epocas, best=6, F1=0.6161
+- v3 (3 capas, sqrt, lr discrim.): 11 epocas, best=8, F1=0.6565 ← DEFINITIVO
+El early stopping confirma convergencia real en las 3 variantes.
 
 ### BUG 7 (CORREGIDO): Notebook 05 tenia celda "TODO" residual y visualizacion de atencion rota
 
@@ -259,35 +268,39 @@ LSTM usa MAX_LEN=150 (Felipe paso `max_len=150` a `build_pipeline()`), BiLSTM/Co
 
 | # | Modelo | Owner | Track | F1 macro | Accuracy | Prec macro | Recall macro | Params | Tiempo |
 |---|---|---|---|---|---|---|---|---|---|
-| 1 | **BiLSTM+MultiHead** | Daniel | PP | **0.6193** | 0.6548 | 0.6086 | 0.6454 | 6,110,981 | 303.8s GPU |
-| 2 | **BETO fine-tuned** | Sebastian | TI | **0.5873** | 0.6592 | 0.5810 | 0.5983 | 7.68M entrenables | 676s GPU |
-| 3 | BiLSTM v2 (class weights) | Yibby | PP | 0.5989 | 0.6453 | 0.5870 | 0.6251 | 3,253,253 | 1,792s CPU |
-| 4 | GRU+Bahdanau | Daniel | PP | 0.5785 | 0.6416 | 0.5757 | 0.6024 | 4,599,813 | 119.4s GPU |
-| 5 | BiLSTM+Bahdanau | Daniel | PP | 0.5740 | 0.6471 | 0.5836 | 0.5842 | 5,191,685 | 129.3s GPU |
-| 6 | BiLSTM v1 (sin weights) | Yibby | PP | 0.5749 | 0.6871 | 0.5876 | 0.5795 | 3,253,253 | 27,686s CPU |
-| 7 | LSTM v3 | Felipe | PP | 0.3996 | 0.6042 | 0.5639 | 0.4408 | 2,700,933 | 321.2s CPU |
+| 1 | **BETO v3 fine-tuned** | Sebastian | TI | **0.6565** | **0.7252** | 0.6544 | 0.6609 | 21.9M entrenables | 1,780s GPU |
+| 2 | **BiLSTM+MultiHead** | Daniel | PP | **0.6193** | 0.6548 | 0.6086 | 0.6454 | 6,110,981 | 303.8s GPU |
+| 3 | BETO v2 fine-tuned | Sebastian | TI | 0.6161 | 0.6864 | 0.6084 | 0.6306 | 21.9M entrenables | 1,566s GPU |
+| 4 | BiLSTM v2 (class weights) | Yibby | PP | 0.5989 | 0.6453 | 0.5870 | 0.6251 | 3,253,253 | 1,792s CPU |
+| 5 | BETO v1 fine-tuned | Sebastian | TI | 0.5926 | 0.6706 | 0.5837 | 0.6106 | 7.68M entrenables | 1,036s GPU |
+| 6 | GRU+Bahdanau | Daniel | PP | 0.5785 | 0.6416 | 0.5757 | 0.6024 | 4,599,813 | 119.4s GPU |
+| 7 | BiLSTM+Bahdanau | Daniel | PP | 0.5740 | 0.6471 | 0.5836 | 0.5842 | 5,191,685 | 129.3s GPU |
+| 8 | BiLSTM v1 (sin weights) | Yibby | PP | 0.5749 | 0.6871 | 0.5876 | 0.5795 | 3,253,253 | 27,686s CPU |
+| 9 | LSTM v3 | Felipe | PP | 0.3996 | 0.6042 | 0.5639 | 0.4408 | 2,700,933 | 321.2s CPU |
 
-**NOTA IMPORTANTE sobre BiLSTM de Yibby:** El plan_avance_global.md y documentos previos usaban F1=0.5568 para BiLSTM v1. Los JSONs muestran F1=0.5749 (v1) y F1=0.5989 (v2). El equipo debe verificar cual evaluacion es correcta y cual modelo se designa como "definitivo" del clasico 2.
+**NOTA:** BETO v3 supera a todos los modelos del proyecto (F1=0.6565 vs BiLSTM+MultiHead F1=0.6193, +3.7 puntos). Es el mejor en F1 macro, accuracy, y en 4 de 5 clases individuales (1★, 3★, 4★, 5★). BiLSTM+MultiHead mantiene ventaja leve en clase 2★ (0.533 vs 0.502).
 
 **F1 por clase (modelos definitivos, segun JSONs):**
 
-| Clase | LSTM v3 | BiLSTM v1 | BiLSTM+MultiHead | BETO |
+| Clase | LSTM v3 | BiLSTM v1 | BiLSTM+MultiHead | BETO v3 |
 |---|---|---|---|---|
-| 1 estrella | 0.686 | 0.716 | 0.756 | 0.729 |
-| 2 estrellas | 0.168 | 0.202 | **0.533** | 0.386 |
-| 3 estrellas | 0.359 | 0.564 | **0.549** | 0.514 |
-| 4 estrellas | 0.022 | 0.572 | 0.480 | 0.514 |
-| 5 estrellas | 0.764 | 0.821 | 0.778 | 0.794 |
+| 1 estrella | 0.686 | 0.716 | 0.756 | **0.777** |
+| 2 estrellas | 0.168 | 0.202 | 0.533 | **0.502** |
+| 3 estrellas | 0.359 | 0.564 | 0.549 | **0.595** |
+| 4 estrellas | 0.022 | 0.572 | 0.480 | **0.561** |
+| 5 estrellas | 0.764 | 0.821 | 0.778 | **0.848** |
 
-**Modelo combinado seleccionado:** BiLSTM+MultiHead de Daniel (F1 macro = 0.6193, MEJOR de todo el proyecto)
+**Mejor global:** BETO v3 de Sebastian (F1 macro = 0.6565, MEJOR de todo el proyecto)
+**Modelo combinado seleccionado:** BiLSTM+MultiHead de Daniel (F1 macro = 0.6193, segundo mejor)
 **Mejor modelo clasico (segun JSON):** BiLSTM v1 de Yibby (F1 macro = 0.5749) — o v2 (F1=0.5989) si se prefiere F1 sobre accuracy
-**Mejor global:** BiLSTM+MultiHead de Daniel (F1 macro = 0.6193, supera a BETO por 3.2 puntos)
 
 **Decisiones tecnicas confirmadas:**
 - Framework: PyTorch (todo el equipo)
 - Modelo combinado: BiLSTM + Multi-Head Attention (4 cabezas), con class weights
-- Transformer: BETO cased (`dccuchile/bert-base-spanish-wwm-cased`)
-- Capas descongeladas: encoder.layer.11 + pooler + classifier (7.0% de params)
+- Transformer: BETO cased (`dccuchile/bert-base-spanish-wwm-cased`), v3 definitiva
+- Capas descongeladas (v3): encoder.layer.9, 10, 11 + pooler + classifier (19.9% de params)
+- Class weights transformer (v3): sqrt(balanced)
+- LR discriminativo (v3): layer.9=2e-6, layer.10=1e-5, layer.11+classifier=2e-5
 - Embeddings clasicos: entrenables desde cero (no pre-cargados)
 - VOCAB_SIZE: 20,000 (99.2% cobertura)
 - MAX_LEN: 200 (preprocessing.py default), 150 (LSTM de Felipe), 128 (Transformer)
@@ -399,8 +412,8 @@ metrics_dict = finalize_and_save(y_true, y_pred, metrics_dict, show_plots=True)
 |---|---|---|
 | Hito 1: Cimientos listos | Vie 8 mayo | COMPLETADO |
 | Hito 2: Modelos congelados + metricas | Jue 14 mayo | COMPLETADO (4/4 modelos con metricas) |
-| Hito 3: Borradores 1.0 completos | Jue 21 mayo | ATRASADO (1/4 borradores: articulo IEEE ~85%, otros 3 NO iniciados) |
-| Entrega y presentacion | **Lun 25 mayo** | CRITICO — faltan 4 documentos finales |
+| Hito 3: Borradores 1.0 completos | Jue 21 mayo | ATRASADO (2/4 borradores: articulo IEEE ~85%, informe investigacion en Word) |
+| Entrega y presentacion | **Lun 25 mayo** | CRITICO — faltan documentos finales en PDF |
 
 ---
 
